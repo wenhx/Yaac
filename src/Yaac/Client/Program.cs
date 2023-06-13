@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Yaac.Client;
+using Yaac.Client.Services;
 
 namespace Yaac.Client;
 
@@ -13,6 +15,7 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddAuthorizationCore();
+        builder.Services.AddScoped<AuthenticationStateProvider, YaacAuthenticationStateProvider>();
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
         await builder.Build().RunAsync();
