@@ -1,7 +1,116 @@
 ﻿@page "/auth/sign-in"
+@inherits YaacComponentBase
+@layout AuthLayout
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>Sign In Page</h3>
+<PageTitle>Sign In</PageTitle>
+
+<h1 class="text-center my-4">
+    Yet Another AI Chat
+</h1>
+
+<div class="container mt-md-5">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-6">
+            @if (IsFromRegister)
+            {
+                <div class="alert alert-primary" role="alert">
+                    Successfully registered, please use your registration information to log in.
+                </div>
+            }
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h2 text-center">Sign in</h1>
+                </div>
+                <div class="card-body">
+                    <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="_signInModel">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-floating mb-3">
+                            <InputText id="inputUsername" class="form-control" @bind-Value="_signInModel.UserName" autofocus placeholder="Username" />
+                            <label for="inputUsername">User Name</label>
+                            <ValidationMessage For="@(() => _signInModel.UserName)" />
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="_signInModel.Password" />
+                            <label for="inputPassword">Password</label>
+                            <ValidationMessage For="@(() => _signInModel.Password)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@_signInModel.RememberMe" />
+                                <label class="form-check-label" for="inputRememberMe">Remember me</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                        </div>
+
+                        <label class="text-danger my-3">@_error</label>
+
+                        <NavLink href="auth/register">
+                            <h6 class="font-weight-normal text-center">Create account</h6>
+                        </NavLink>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    SignInModel _signInModel = new ();
+    string _error = default!;
 
+    [Parameter, SupplyParameterFromQuery]
+    public string? From
+    {
+        get;
+        set;
+    }
+
+    public bool IsFromRegister
+    {
+        get
+        {
+            return String.Equals(From, "register", StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    async Task OnSubmit()
+    {
+        _error = String.Empty;
+        try
+        {
+            var result = await AuthService.SignInAsync(_signInModel);
+            if (result.Succeeded)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                _error = result.Message!;
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUser();
+        if (user != null && user.IsAuthenticated)
+        {
+            //Utility.ConsoleDebug($"User [{user.Name}] authentication succeeded");
+            System.Diagnostics.Debug.WriteLine($"User [{user.Name}] authentication succeeded");
+            NavigationManager.NavigateTo("/");
+        }
+    }
 }
