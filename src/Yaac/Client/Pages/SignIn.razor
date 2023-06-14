@@ -8,7 +8,7 @@
 <PageTitle>Sign In</PageTitle>
 
 <h1 class="text-center my-4">
-    Yet Another AI Chat
+    @UIConstants.SiteName
 </h1>
 
 <div class="container mt-md-5">
@@ -17,7 +17,7 @@
             @if (IsFromRegister)
             {
                 <div class="alert alert-primary" role="alert">
-                    Successfully registered, please use your registration information to log in.
+                    Successfully registered, please use your registration information to sign in.
                 </div>
             }
             <div class="card">
@@ -53,7 +53,7 @@
 
                         <label class="text-danger my-3">@_error</label>
 
-                        <NavLink href="auth/register">
+                        <NavLink href="auth/sign-up">
                             <h6 class="font-weight-normal text-center">Create account</h6>
                         </NavLink>
                     </EditForm>

@@ -3,8 +3,7 @@ using Yaac.Shared.Models;
 
 namespace Yaac.Client.Services;
 
-public interface IAuthService
+public interface IAuthApi
 {
-    Task<InvokedResult> SignInAsync(SignInModel model);
     Task<InvokedResult> SignUpAsync(SignUpModel model);
 }

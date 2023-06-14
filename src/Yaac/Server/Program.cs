@@ -1,4 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using Yaac.Server;
+using Yaac.Server.Data;
+using Yaac.Server.Models;
+using Yaac.Shared;
 
 namespace Yaac;
 
@@ -9,8 +16,29 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+        builder.Services.AddDbContext<YaacDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString(nameof(YaacDbContext))));
+        builder.Services.AddIdentity<YaacUser, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<YaacDbContext>()
+            .AddDefaultTokenProviders();
+        builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection(nameof(IdentityOptions)))
+            .Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequiredLength = Constants.Models.MinimumPasswordLength;
+        });
 
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var error = context.ModelState.Where(state => state.Value != null)
+                                                .SelectMany(state => state.Value!.Errors)
+                                                .Select(error => error.ErrorMessage)
+                                                .First();
+                return new BadRequestObjectResult(InvokedResult.Fail(error));
+            };
+        });
+
+        builder.Services.AddOptions<AuthOptions>();
         builder.Services.AddRazorPages();
 
         var app = builder.Build();
@@ -34,6 +62,8 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapRazorPages();
         app.MapControllers();

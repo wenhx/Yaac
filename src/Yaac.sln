@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaac.Server", "Yaac\Server\Yaac.Server.csproj", "{1B191B76-A916-45B7-A91E-B6E56DBAC83F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaac.Server", "Yaac\Server\Yaac.Server.csproj", "{1B191B76-A916-45B7-A91E-B6E56DBAC83F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaac.Client", "Yaac\Client\Yaac.Client.csproj", "{E246ABE6-F1B8-42E2-ADE8-1EE6B54E96A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaac.Client", "Yaac\Client\Yaac.Client.csproj", "{E246ABE6-F1B8-42E2-ADE8-1EE6B54E96A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaac.Shared", "Yaac\Shared\Yaac.Shared.csproj", "{50E8BEC0-3FC4-486A-830D-422999EE6257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaac.Shared", "Yaac\Shared\Yaac.Shared.csproj", "{50E8BEC0-3FC4-486A-830D-422999EE6257}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
