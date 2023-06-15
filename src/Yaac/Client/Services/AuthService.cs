@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Diagnostics;
 using Yaac.Shared;
 using Yaac.Shared.Models;
 
@@ -6,22 +8,33 @@ namespace Yaac.Client.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IAuthApi _authApi;
+    private readonly IAuthApi _authApiClient;
+    private readonly ILocalStorageService _localStorage;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-    public AuthService(IAuthApi authApi)
+    public AuthService(IAuthApi authApi, ILocalStorageService localStorage, AuthenticationStateProvider authenticationStateProvider)
     {
-        _authApi = authApi;
+        _authApiClient = authApi;
+        _localStorage = localStorage;
+        _authenticationStateProvider = authenticationStateProvider;
     }
 
-    public Task<InvokedResult> SignInAsync(SignInModel model)
+    public async Task<InvokedResult> SignInAsync(SignInModel model)
     {
-        return Task.FromResult(InvokedResult.Fail("The method for Sign in has not yet been implemented."));
+        var result = await _authApiClient.SignInAsync(model);
+        Utility.ConsoleDebug($"User [{model.UserName}] signed in {result.Succeeded}");
+        if (result.Succeeded)
+        {
+            await _localStorage.SetItemAsStringAsync(UIConstants.AuthTokenLocalStorageKey, result.Data);
+            await _authenticationStateProvider.GetAuthenticationStateAsync();
+        }
+        return result;
     }
 
     public async Task<InvokedResult> SignUpAsync(SignUpModel model)
     {
-        var result = await _authApi.SignUpAsync(model);
-        Debug.WriteLine($"User [{model.UserName}] registered {result.Succeeded}");
+        var result = await _authApiClient.SignUpAsync(model);
+        Utility.ConsoleDebug($"User [{model.UserName}] signed up {result.Succeeded}");
         return result;
     }
 }

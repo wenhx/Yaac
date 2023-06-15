@@ -9,4 +9,9 @@ public class Constants
         public const int MaximumPasswordLength = 20;
         public const int MinimumPasswordLength = 8;
     }
+
+    public class Errors
+    {
+        public static readonly string InvalidModelState = "Invalid Model State";
+    }
 }

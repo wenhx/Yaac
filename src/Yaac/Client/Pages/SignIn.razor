@@ -108,8 +108,7 @@
         var user = await GetCurrentUser();
         if (user != null && user.IsAuthenticated)
         {
-            //Utility.ConsoleDebug($"User [{user.Name}] authentication succeeded");
-            System.Diagnostics.Debug.WriteLine($"User [{user.Name}] authentication succeeded");
+            Utility.ConsoleDebug($"User [{user.Name}] authentication succeeded");
             NavigationManager.NavigateTo("/");
         }
     }

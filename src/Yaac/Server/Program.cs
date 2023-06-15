@@ -30,15 +30,14 @@ public class Program
         {
             options.InvalidModelStateResponseFactory = context =>
             {
-                var error = context.ModelState.Where(state => state.Value != null)
-                                                .SelectMany(state => state.Value!.Errors)
-                                                .Select(error => error.ErrorMessage)
-                                                .First();
-                return new BadRequestObjectResult(InvokedResult.Fail(error));
+                //var errors = context.ModelState.Where(state => state.Value != null)
+                //                                .SelectMany(state => state.Value!.Errors)
+                //                                .Select(error => error.ErrorMessage);
+                return new BadRequestObjectResult(InvokedResult.Fail(Constants.Errors.InvalidModelState));
             };
         });
 
-        builder.Services.AddOptions<AuthOptions>();
+        builder.Services.AddOptions<AuthOptions>().BindConfiguration(nameof(AuthOptions)).ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddRazorPages();
 
         var app = builder.Build();

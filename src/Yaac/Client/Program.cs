@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,6 +16,7 @@ public class Program
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
         builder.Services.AddAuthorizationCore();
+        builder.Services.AddBlazoredLocalStorage();
         builder.Services.AddScoped<AuthenticationStateProvider, YaacAuthenticationStateProvider>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IAuthApi, AuthApiClient>();
