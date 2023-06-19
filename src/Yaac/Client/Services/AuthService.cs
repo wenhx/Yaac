@@ -31,6 +31,14 @@ public class AuthService : IAuthService
         return result;
     }
 
+    public async Task<InvokedResult> SignOutAsync()
+    {
+        Utility.ConsoleDebug("Removing auth token.");
+        await _localStorage.RemoveItemAsync(UIConstants.AuthTokenLocalStorageKey);
+        await _authenticationStateProvider.GetAuthenticationStateAsync();
+        return InvokedResult.Success;
+    }
+
     public async Task<InvokedResult> SignUpAsync(SignUpModel model)
     {
         var result = await _authApiClient.SignUpAsync(model);

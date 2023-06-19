@@ -1,0 +1,13 @@
+﻿@page "/auth/sign-out"
+@inherits YaacComponentBase
+@layout AuthLayout
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.SignOutAsync();
+        NavigationManager.NavigateTo("/auth/sign-in");
+    }
+}
